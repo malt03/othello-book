@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python dump_points.py <file>")
+    if len(sys.argv) != 3:
+        print("Usage: python dump_points.py <file> <model>")
         return
 
     points, labels = load_data(sys.argv[1])
-    model = train_model(points, labels)
+    model = construct_model(sys.argv[2])
+    train_model(model, points, labels)
     random_points, result = exec_for_random_points(model)
 
     dump_points(random_points, result)
@@ -23,8 +24,16 @@ def load_data(filename):
     return points, labels
 
 
-def train_model(points, labels):
-    model = PointClassifier2D()
+def construct_model(type):
+    if type == "simple":
+        return PointClassifier2DSimple()
+    elif type == "complex":
+        return PointClassifier2DComplex()
+    else:
+        raise ValueError(f"Invalid model type: {type}")
+
+
+def train_model(model, points, labels):
     loss_fn = torch.nn.BCELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -37,8 +46,6 @@ def train_model(points, labels):
 
         if epoch % 1000 == 0:
             print(f"Epoch {epoch}, Loss: {loss.item()}")
-
-    return model
 
 
 def exec_for_random_points(model):
@@ -55,15 +62,32 @@ def dump_points(points, labels):
     plt.show()
 
 
-class PointClassifier2D(torch.nn.Module):
+class PointClassifier2DSimple(torch.nn.Module):
     def __init__(self):
-        super(PointClassifier2D, self).__init__()
-        self.fc = torch.nn.Linear(2, 1)
+        super(PointClassifier2DSimple, self).__init__()
+        self.fc1 = torch.nn.Linear(2, 1)
 
     def forward(self, x):
-        x = self.fc(x).squeeze()
+        x = self.fc1(x)
         x = torch.sigmoid(x)
-        return x
+        return x.squeeze()
+
+
+class PointClassifier2DComplex(torch.nn.Module):
+    def __init__(self):
+        super(PointClassifier2DComplex, self).__init__()
+        self.fc1 = torch.nn.Linear(2, 64)
+        self.fc2 = torch.nn.Linear(64, 64)
+        self.fc3 = torch.nn.Linear(64, 1)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = torch.relu(x)
+        x = self.fc2(x)
+        x = torch.relu(x)
+        x = self.fc3(x)
+        x = torch.sigmoid(x)
+        return x.squeeze()
 
 
 if __name__ == "__main__":
