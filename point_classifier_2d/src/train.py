@@ -76,9 +76,9 @@ class PointClassifier2DSimple(torch.nn.Module):
 class PointClassifier2DComplex(torch.nn.Module):
     def __init__(self):
         super(PointClassifier2DComplex, self).__init__()
-        self.fc1 = torch.nn.Linear(2, 64)
-        self.fc2 = torch.nn.Linear(64, 64)
-        self.fc3 = torch.nn.Linear(64, 1)
+        self.fc1 = torch.nn.Linear(2, 128)
+        self.fc2 = torch.nn.Linear(128, 128)
+        self.fc3 = torch.nn.Linear(128, 1)
 
     def forward(self, x):
         x = self.fc1(x)
