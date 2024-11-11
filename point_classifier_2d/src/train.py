@@ -24,13 +24,12 @@ def load_data(filename):
     return points, labels
 
 
-def construct_model(type):
-    if type == "simple":
+def construct_model(model_type):
+    if model_type == "simple":
         return PointClassifier2DSimple()
-    elif type == "complex":
+    if model_type == "complex":
         return PointClassifier2DComplex()
-    else:
-        raise ValueError(f"Invalid model type: {type}")
+    raise ValueError(f"Invalid model type: {model_type}")
 
 
 def train_model(model, points, labels):
