@@ -36,7 +36,7 @@ def train_model(model, points, labels):
     loss_fn = torch.nn.BCELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
-    for epoch in range(10000):
+    for epoch in range(10001):
         optimizer.zero_grad()
         outputs = model(torch.Tensor(points))
         loss = loss_fn(outputs, torch.Tensor(labels))
@@ -66,10 +66,10 @@ class PointClassifier2DSimple(torch.nn.Module):
         super(PointClassifier2DSimple, self).__init__()
         self.fc1 = torch.nn.Linear(2, 1)
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = torch.sigmoid(x)
-        return x.squeeze()
+    def forward(self, data):
+        data = self.fc1(data)
+        data = torch.sigmoid(data)
+        return data.squeeze()
 
 
 class PointClassifier2DComplex(torch.nn.Module):
@@ -79,14 +79,14 @@ class PointClassifier2DComplex(torch.nn.Module):
         self.fc2 = torch.nn.Linear(128, 128)
         self.fc3 = torch.nn.Linear(128, 1)
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = torch.relu(x)
-        x = self.fc2(x)
-        x = torch.relu(x)
-        x = self.fc3(x)
-        x = torch.sigmoid(x)
-        return x.squeeze()
+    def forward(self, data):
+        data = self.fc1(data)
+        data = torch.relu(data)
+        data = self.fc2(data)
+        data = torch.relu(data)
+        data = self.fc3(data)
+        data = torch.sigmoid(data)
+        return data.squeeze()
 
 
 if __name__ == "__main__":
