@@ -55,7 +55,7 @@ def exec_for_random_points(model):
 
 def dump_points(points, labels):
     red = points[labels < 0.5]
-    blue = points[labels > 0.5]
+    blue = points[labels >= 0.5]
     plt.scatter(red[:, 0], red[:, 1], c="red")
     plt.scatter(blue[:, 0], blue[:, 1], c="blue")
     plt.show()
