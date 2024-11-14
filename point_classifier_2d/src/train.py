@@ -21,7 +21,7 @@ def load_data(filename):
     data = np.loadtxt(filename, delimiter=",")
     points = data[:, :2]
     labels = data[:, 2]
-    return points, labels
+    return torch.Tensor(points), torch.Tensor(labels)
 
 
 def construct_model(model_type):
@@ -38,8 +38,8 @@ def train_model(model, points, labels):
 
     for epoch in range(10001):
         optimizer.zero_grad()
-        outputs = model(torch.Tensor(points))
-        loss = loss_fn(outputs, torch.Tensor(labels))
+        outputs = model(points)
+        loss = loss_fn(outputs, labels)
         loss.backward()
         optimizer.step()
 
@@ -48,8 +48,8 @@ def train_model(model, points, labels):
 
 
 def exec_for_random_points(model):
-    random_points = np.random.rand(1000, 2)
-    result = model(torch.Tensor(random_points)).detach().numpy()
+    random_points = torch.Tensor(np.random.rand(1000, 2))
+    result = model(random_points).detach().numpy()
     return random_points, result
 
 
