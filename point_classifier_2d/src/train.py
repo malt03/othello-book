@@ -34,9 +34,9 @@ def construct_model(model_type):
 
 def train_model(model, points, labels):
     loss_fn = torch.nn.BCELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.003)
 
-    for epoch in range(10001):
+    for epoch in range(20001):
         optimizer.zero_grad()
         outputs = model(points)
         loss = loss_fn(outputs, labels)
